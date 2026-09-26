@@ -7,46 +7,75 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
-        body { background-color: #0f172a; color: #f8fafc; line-height: 1.6; padding: 20px; }
-        header { text-align: center; padding: 30px 0; }
-        header h1 { font-size: 2.5rem; color: #38bdf8; margin-bottom: 5px; }
-        header p { color: #94a3b8; font-size: 1rem; }
-        .container { max-width: 600px; margin: 0 auto; }
-        .card { background-color: #1e293b; border-radius: 12px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .card h2 { color: #38bdf8; margin-bottom: 15px; font-size: 1.4rem; }
+        body { background-color: #0f172a; color: #f8fafc; line-height: 1.6; padding-bottom: 70px; }
+
+        /* شريط علوي شبيه بالتصميم المطلوب */
+        .app-bar { background-color: #1e293b; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 100; }
+        .app-bar-title { font-size: 1.2rem; font-weight: bold; color: #38bdf8; }
+        .app-bar-icons { display: flex; gap: 15px; }
+        .app-bar-icons button { background: none; border: none; color: #94a3b8; font-size: 1.2rem; cursor: pointer; }
+        .app-bar-icons button:hover { color: #38bdf8; }
+
+        .container { max-width: 600px; margin: 20px auto; padding: 0 15px; }
+        .card { background-color: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .card h2 { color: #38bdf8; margin-bottom: 15px; font-size: 1.3rem; }
+
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; color: #cbd5e1; font-size: 0.95rem; }
-        input, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background-color: #0f172a; color: #fff; font-size: 1rem; }
+        input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background-color: #0f172a; color: #fff; font-size: 1rem; }
         input:focus { outline: none; border-color: #38bdf8; }
-        button { background-color: #0284c7; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; width: 100%; transition: background 0.3s; margin-top: 5px; }
-        button:hover { background-color: #0369a1; }
-        .main-menu { display: grid; gap: 15px; }
+
+        button.action-btn { background-color: #0284c7; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; width: 100%; transition: background 0.3s; margin-top: 5px; }
+        button.action-btn:hover { background-color: #0369a1; }
+
+        .main-menu { display: grid; gap: 15px; margin-top: 20px; }
         .menu-btn { background-color: #1e293b; color: #38bdf8; border: 2px solid #38bdf8; padding: 15px; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; text-align: center; transition: 0.3s; }
         .menu-btn:hover { background-color: #38bdf8; color: #0f172a; }
+
         .section { display: none; }
         .section.active { display: block; }
         .back-link { display: inline-block; margin-bottom: 15px; color: #38bdf8; text-decoration: none; cursor: pointer; font-weight: 600; }
-        .back-link:hover { text-decoration: underline; }
-        /* القائمة الجانبية (3 خطوط) */
-        .sidebar { position: fixed; top: 0; right: -300px; width: 300px; height: 100%; background: #1e293b; box-shadow: -5px 0 15px rgba(0,0,0,0.5); transition: 0.4s; z-index: 1000; padding: 20px; }
+
+        /* شريط التنقل السفلي */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background-color: #1e293b; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #334155; z-index: 1000; }
+        .nav-item { background: none; border: none; color: #94a3b8; font-size: 1.3rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
+        .nav-item.active { color: #38bdf8; }
+
+        /* قائمة الدردشات وجهات الاتصال مثل الصورة */
+        .chat-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: #1e293b; border-bottom: 1px solid #334155; border-radius: 8px; margin-bottom: 10px; }
+        .chat-info { display: flex; align-items: center; gap: 12px; }
+        .chat-avatar { width: 45px; height: 45px; border-radius: 50%; background: #475569; object-fit: cover; }
+        .chat-name { font-weight: bold; color: #fff; font-size: 1rem; }
+        .chat-date { color: #94a3b8; font-size: 0.8rem; }
+
+        /* القائمة الجانبية */
+        .sidebar { position: fixed; top: 0; right: -320px; width: 320px; height: 100%; background: #1e293b; box-shadow: -5px 0 15px rgba(0,0,0,0.5); transition: 0.4s; z-index: 2000; padding: 20px; overflow-y: auto; }
         .sidebar.open { right: 0; }
         .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #475569; padding-bottom: 10px; }
-        .close-sidebar { background: none; border: none; color: #ef4444; font-size: 1.5rem; cursor: pointer; width: auto; }
-        .hamburger { position: absolute; top: 20px; right: 20px; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 1.2rem; }
+        .close-sidebar { background: none; border: none; color: #ef4444; font-size: 1.5rem; cursor: pointer; }
+        
         .result-box { background: #0f172a; padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px dashed #38bdf8; text-align: center; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>CodifyX</h1>
-        <p>منصتك البرمجية والتعليمية المتقدمة</p>
-    </header>
+    <!-- الشريط العلوي الاحترافي -->
+    <div class="app-bar">
+        <div class="app-bar-title" id="bar-title">CodifyX</div>
+        <div class="app-bar-icons" id="bar-icons" style="display:none;">
+            <button onclick="toggleSidebar()">⚙️</button>
+            <button onclick="showSection('dashboard-section')">💬</button>
+        </div>
+    </div>
 
     <div class="container">
 
-        <!-- 1. الواجهة الرئيسية (الخيارات الأربعة) -->
+        <!-- 1. الواجهة الرئيسية (الخيارات الأربعة فقط) -->
         <div id="home-section" class="section active">
+            <div style="text-align: center; padding: 20px 0;">
+                <h1 style="color: #38bdf8; font-size: 2.2rem;">CodifyX</h1>
+                <p style="color: #94a3b8;">منصتك البرمجية والتعليمية المتقدمة</p>
+            </div>
             <div class="main-menu">
                 <button class="menu-btn" onclick="showSection('register-section')">1. إنشاء حساب</button>
                 <button class="menu-btn" onclick="showSection('login-section')">2. تسجيل دخول</button>
@@ -55,7 +84,7 @@
             </div>
         </div>
 
-        <!-- 2. قسم إنشاء حساب -->
+        <!-- 2. إنشاء حساب -->
         <div id="register-section" class="section card">
             <span class="back-link" onclick="showSection('home-section')">← رجوع للرئيسية</span>
             <h2>إنشاء حساب جديد</h2>
@@ -67,11 +96,11 @@
                 <label>الرمز السري</label>
                 <input type="password" id="reg-pass" placeholder="اختر رمزاً سرياً">
             </div>
-            <button onclick="registerUser()">إنشاء الحساب وتوليد الرقم</button>
+            <button class="action-btn" onclick="registerUser()">إنشاء الحساب</button>
             <div id="reg-result" class="result-box" style="display:none;"></div>
         </div>
 
-        <!-- 3. قسم تسجيل الدخول -->
+        <!-- 3. تسجيل الدخول -->
         <div id="login-section" class="section card">
             <span class="back-link" onclick="showSection('home-section')">← رجوع للرئيسية</span>
             <h2>تسجيل الدخول</h2>
@@ -83,25 +112,35 @@
                 <label>الرمز السري</label>
                 <input type="password" id="login-pass" placeholder="أدخل الرمز السري">
             </div>
-            <button onclick="loginUser()">دخول</button>
+            <button class="action-btn" onclick="loginUser()">دخول</button>
         </div>
 
-        <!-- 4. واجهة المستخدم الداخلية (بعد تسجيل الدخول) -->
+        <!-- 4. واجهة المستخدم الداخلية (الرسائل وجهات الاتصال شبيهة بالتصميم) -->
         <div id="dashboard-section" class="section">
-            <button class="hamburger" onclick="toggleSidebar()">☰</button>
             <div class="card">
-                <h2 id="welcome-msg">مرحباً بك</h2>
-                <p style="color: #94a3b8; margin-bottom: 20px;">ابحث عن أصدقائك عبر رقم الحساب للتواصل معهم:</p>
+                <h2>البحث عن الأصدقاء</h2>
                 <div class="form-group">
-                    <label>رقم حساب الصديق</label>
-                    <input type="text" id="friend-acc" placeholder="أدخل رقم صديقك المكون من 10 أرقام">
+                    <label>رقم حساب الصديق (10 أرقام)</label>
+                    <input type="text" id="friend-acc" placeholder="أدخل الرقم للبحث والتواصل">
                 </div>
-                <button onclick="searchFriend()">بحث عن الصديق</button>
+                <button class="action-btn" onclick="searchFriend()">بحث عن الصديق</button>
                 <div id="friend-result" class="result-box" style="display:none;"></div>
             </div>
 
-            <!-- لوحة تحكم القائد (تظهر فقط لحساب القيادة الرئيسي) -->
-            <div id="leader-panel" class="card" style="display:none; border: 2px solid #eab308;">
+            <!-- قائمة الرسائل والتواصل -->
+            <div class="chat-item">
+                <div class="chat-info">
+                    <img src="https://via.placeholder.com/45" class="chat-avatar" id="my-chat-avatar">
+                    <div>
+                        <div class="chat-name" id="current-user-display-name">المستخدم (أنت)</div>
+                        <div style="color: #94a3b8; font-size: 0.85rem;">متصل الآن</div>
+                    </div>
+                </div>
+                <div class="chat-date">الآن</div>
+            </div>
+
+            <!-- لوحة تحكم القائد -->
+            <div id="leader-panel" class="card" style="display:none; border: 2px solid #eab308; margin-top: 20px;">
                 <h2 style="color: #eab308;">👑 لوحة تحكم القائد (إدارة الأرصدة)</h2>
                 <div class="form-group">
                     <label>رقم حساب المستخدم</label>
@@ -111,7 +150,7 @@
                     <label>المبلغ (إضافة أو خصم بالسالب مثل -10)</label>
                     <input type="number" id="admin-amount" placeholder="أدخل القيمة">
                 </div>
-                <button style="background-color: #ca8a04;" onclick="updateBalance()">تحديث رصيد المستخدم</button>
+                <button class="action-btn" style="background-color: #ca8a04;" onclick="updateBalance()">تحديث رصيد المستخدم</button>
                 <div id="admin-result" class="result-box" style="display:none;"></div>
             </div>
         </div>
@@ -120,7 +159,7 @@
         <div id="about-section" class="section card">
             <span class="back-link" onclick="showSection('home-section')">← رجوع للرئيسية</span>
             <h2>من نحن وأعمالنا</h2>
-            <p>نحن مبادرة <strong>CodifyX</strong> البرمجية والتعليمية. نهدف إلى تطوير حلول رقمية متميزة وربط المطورين والمستخدمين بأدوات سلسة وآمنة.</p>
+            <p>نحن مبادرة <strong>CodifyX</strong> البرمجية والتعليمية. نهدف إلى تطوير حلول رقمية متميزة وربط المستخدمين بأدوات سلسة وآمنة.</p>
         </div>
 
         <!-- 6. تواصل معنا -->
@@ -135,31 +174,40 @@
 
     </div>
 
-    <!-- القائمة الجانبية (3 خطوط) -->
+    <!-- شريط التنقل السفلي (يظهر عند تسجيل الدخول) -->
+    <div class="bottom-nav" id="bottom-nav-bar" style="display:none;">
+        <button class="nav-item" onclick="toggleSidebar()">⚙️<span style="font-size: 0.75rem;">الإعدادات</span></button>
+        <button class="nav-item" onclick="showSection('dashboard-section')">👥<span style="font-size: 0.75rem;">الأصدقاء</span></button>
+        <button class="nav-item" onclick="showSection('dashboard-section')">💬<span style="font-size: 0.75rem;">الرسائل</span></button>
+    </div>
+
+    <!-- القائمة الجانبية (3 خطوط / إعدادات) -->
     <div id="sidebar" class="sidebar">
         <div class="sidebar-header">
-            <h3>القائمة</h3>
+            <h3>الإعدادات والملف</h3>
             <button class="close-sidebar" onclick="toggleSidebar()">×</button>
         </div>
-        <div style="display: grid; gap: 10px;">
-            <button onclick="openCheckBalance()">عرض رصيدي</button>
-            <div id="sidebar-balance-box" style="display:none; padding: 10px; background: #0f172a; border-radius: 6px; text-align: center; margin-top: 5px;"></div>
-            
-            <div style="margin-top: 15px;">
-                <label style="font-size: 0.85rem; margin-bottom: 3px;">الصورة الشخصية (من المعرض)</label>
+        <div style="display: grid; gap: 15px;">
+            <div id="profile-pic-preview" style="text-align: center;">
+                <img src="https://via.placeholder.com/80" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:2px solid #38bdf8;">
+            </div>
+            <div>
+                <label style="font-size: 0.85rem; margin-bottom: 5px; color:#38bdf8;">إضافة صورة شخصية من المعرض</label>
                 <input type="file" accept="image/*" onchange="loadProfilePic(event)" style="font-size: 0.8rem; padding: 6px;">
             </div>
-            <div id="profile-pic-preview" style="margin-top: 10px; text-align: center;"></div>
             
-            <button style="background-color: #ef4444; margin-top: 20px;" onclick="logout()">تسجيل الخروج</button>
+            <hr style="border-color: #475569;">
+            
+            <button class="action-btn" onclick="openCheckBalance()">عرض رصيدي</button>
+            <div id="sidebar-balance-box" style="display:none; padding: 12px; background: #0f172a; border-radius: 6px; text-align: center;"></div>
+            
+            <button class="action-btn" style="background-color: #ef4444; margin-top: 20px;" onclick="logout()">تسجيل الخروج</button>
         </div>
     </div>
 
     <script>
-        // قاعدة بيانات وهمية محلية للتجربة السريعة (تتحول لـ Firebase لاحقاً)
-        // حساب القائد الافتراضي الرئيسي (رقم الحساب: 1000000001، الرمز: admin123)
         let usersDB = JSON.parse(localStorage.getItem('codifyx_users')) || {
-            "1000000001": { name: "القائد العام", pass: "admin123", balance: 5000, isLeader: true }
+            "1000000001": { name: "القائد العام", pass: "admin123", balance: 5000, isLeader: true, avatar: "" }
         };
         let currentUserAcc = null;
 
@@ -170,6 +218,16 @@
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
+            
+            if(sectionId === 'dashboard-section') {
+                document.getElementById('bar-icons').style.display = 'flex';
+                document.getElementById('bottom-nav-bar').style.display = 'flex';
+                document.getElementById('bar-title').innerText = 'رسائل المنصة';
+            } else {
+                document.getElementById('bar-icons').style.display = 'none';
+                document.getElementById('bottom-nav-bar').style.display = 'none';
+                document.getElementById('bar-title').innerText = 'CodifyX';
+            }
         }
 
         function registerUser() {
@@ -179,18 +237,17 @@
                 alert('يرجى إدخال الاسم والرمز السري!');
                 return;
             }
-            // توليد رقم عشوائي من 10 أرقام
             let accNum = Math.floor(1000000000 + Math.random() * 9000000000).toString();
             while(usersDB[accNum]) {
                 accNum = Math.floor(1000000000 + Math.random() * 9000000000).toString();
             }
 
-            usersDB[accNum] = { name: name, pass: pass, balance: 0, isLeader: false };
+            usersDB[accNum] = { name: name, pass: pass, balance: 0, isLeader: false, avatar: "" };
             saveDB();
 
             const resBox = document.getElementById('reg-result');
             resBox.style.display = 'block';
-            resBox.innerHTML = `تم إنشاء الحساب بنجاح!<br><b>رقم حسابك الخاص (احفظه جيداً):</b> <span style="color:#38bdf8; font-size:1.2rem;">${accNum}</span>`;
+            resBox.innerHTML = `تم إنشاء الحساب بنجاح!<br><b>رقم حسابك (احفظه جيداً):</b> <span style="color:#38bdf8; font-size:1.2rem;">${accNum}</span>`;
         }
 
         function loginUser() {
@@ -199,10 +256,15 @@
 
             if(usersDB[acc] && usersDB[acc].pass === pass) {
                 currentUserAcc = acc;
-                document.getElementById('welcome-msg').innerText = `مرحباً، ${usersDB[acc].name}`;
+                const user = usersDB[acc];
+                document.getElementById('current-user-display-name').innerText = `${user.name} (أنت)`;
                 
-                // إظهار لوحة تحكم القائد إذا كان هو القائد
-                if(usersDB[acc].isLeader) {
+                if(user.avatar) {
+                    document.getElementById('my-chat-avatar').src = user.avatar;
+                    document.getElementById('profile-pic-preview').innerHTML = `<img src="${user.avatar}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:2px solid #38bdf8;">`;
+                }
+
+                if(user.isLeader) {
                     document.getElementById('leader-panel').style.display = 'block';
                 } else {
                     document.getElementById('leader-panel').style.display = 'none';
@@ -246,7 +308,7 @@
             if(usersDB[targetAcc]) {
                 usersDB[targetAcc].balance += amount;
                 saveDB();
-                resBox.innerHTML = `تم تحديث رصيد الحساب ${targetAcc} بنجاح. الرصيد الجديد: ${usersDB[targetAcc].balance}`;
+                resBox.innerHTML = `تم تحديث رصيد الحساب ${targetAcc}. الرصيد الجديد: ${usersDB[targetAcc].balance}`;
             } else {
                 resBox.innerHTML = `<span style="color:#ef4444;">الحساب غير موجود!</span>`;
             }
@@ -257,7 +319,11 @@
             if(file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    document.getElementById('profile-pic-preview').innerHTML = `<img src="${e.target.result}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:2px solid #38bdf8;">`;
+                    const base64Img = e.target.result;
+                    usersDB[currentUserAcc].avatar = base64Img;
+                    saveDB();
+                    document.getElementById('my-chat-avatar').src = base64Img;
+                    document.getElementById('profile-pic-preview').innerHTML = `<img src="${base64Img}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:2px solid #38bdf8;">`;
                 }
                 reader.readAsDataURL(file);
             }
