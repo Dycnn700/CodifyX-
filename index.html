@@ -9,7 +9,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
         body { background-color: #0f172a; color: #f8fafc; line-height: 1.6; padding-bottom: 70px; }
 
-        /* شريط علوي شبيه بالتصميم المطلوب */
         .app-bar { background-color: #1e293b; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 100; }
         .app-bar-title { font-size: 1.2rem; font-weight: bold; color: #38bdf8; }
         .app-bar-icons { display: flex; gap: 15px; }
@@ -22,8 +21,8 @@
 
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; color: #cbd5e1; font-size: 0.95rem; }
-        input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background-color: #0f172a; color: #fff; font-size: 1rem; }
-        input:focus { outline: none; border-color: #38bdf8; }
+        input, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background-color: #0f172a; color: #fff; font-size: 1rem; }
+        input:focus, textarea:focus { outline: none; border-color: #38bdf8; }
 
         button.action-btn { background-color: #0284c7; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; width: 100%; transition: background 0.3s; margin-top: 5px; }
         button.action-btn:hover { background-color: #0369a1; }
@@ -36,19 +35,27 @@
         .section.active { display: block; }
         .back-link { display: inline-block; margin-bottom: 15px; color: #38bdf8; text-decoration: none; cursor: pointer; font-weight: 600; }
 
-        /* شريط التنقل السفلي */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background-color: #1e293b; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #334155; z-index: 1000; }
         .nav-item { background: none; border: none; color: #94a3b8; font-size: 1.3rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
         .nav-item.active { color: #38bdf8; }
 
-        /* قائمة الدردشات وجهات الاتصال مثل الصورة */
-        .chat-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: #1e293b; border-bottom: 1px solid #334155; border-radius: 8px; margin-bottom: 10px; }
+        .chat-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: #1e293b; border-bottom: 1px solid #334155; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; }
+        .chat-item:hover { background: #334155; }
         .chat-info { display: flex; align-items: center; gap: 12px; }
         .chat-avatar { width: 45px; height: 45px; border-radius: 50%; background: #475569; object-fit: cover; }
         .chat-name { font-weight: bold; color: #fff; font-size: 1rem; }
         .chat-date { color: #94a3b8; font-size: 0.8rem; }
 
-        /* القائمة الجانبية */
+        /* نافذة المحادثة المباشرة */
+        .chat-box-container { display: flex; flex-direction: column; height: 400px; background: #0f172a; border-radius: 8px; border: 1px solid #334155; overflow: hidden; margin-top: 15px; }
+        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .message { max-width: 75%; padding: 10px 14px; border-radius: 10px; font-size: 0.95rem; word-break: break-word; }
+        .message.sent { background: #0284c7; color: white; align-self: flex-end; border-bottom-left-radius: 2px; }
+        .message.received { background: #334155; color: #f8fafc; align-self: flex-start; border-bottom-right-radius: 2px; }
+        .chat-input-area { display: flex; padding: 10px; background: #1e293b; gap: 10px; align-items: center; }
+        .chat-input-area input { flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: #fff; }
+        .chat-input-area button { background: #0284c7; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+
         .sidebar { position: fixed; top: 0; right: -320px; width: 320px; height: 100%; background: #1e293b; box-shadow: -5px 0 15px rgba(0,0,0,0.5); transition: 0.4s; z-index: 2000; padding: 20px; overflow-y: auto; }
         .sidebar.open { right: 0; }
         .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #475569; padding-bottom: 10px; }
@@ -59,7 +66,6 @@
 </head>
 <body>
 
-    <!-- الشريط العلوي الاحترافي -->
     <div class="app-bar">
         <div class="app-bar-title" id="bar-title">CodifyX</div>
         <div class="app-bar-icons" id="bar-icons" style="display:none;">
@@ -70,7 +76,7 @@
 
     <div class="container">
 
-        <!-- 1. الواجهة الرئيسية (الخيارات الأربعة فقط) -->
+        <!-- 1. الواجهة الرئيسية -->
         <div id="home-section" class="section active">
             <div style="text-align: center; padding: 20px 0;">
                 <h1 style="color: #38bdf8; font-size: 2.2rem;">CodifyX</h1>
@@ -115,28 +121,24 @@
             <button class="action-btn" onclick="loginUser()">دخول</button>
         </div>
 
-        <!-- 4. واجهة المستخدم الداخلية (الرسائل وجهات الاتصال شبيهة بالتصميم) -->
+        <!-- 4. واجهة المستخدم والرسائل -->
         <div id="dashboard-section" class="section">
             <div class="card">
-                <h2>البحث عن الأصدقاء</h2>
+                <h2>إضافة صديق للبدء بالمراسلة</h2>
                 <div class="form-group">
                     <label>رقم حساب الصديق (10 أرقام)</label>
-                    <input type="text" id="friend-acc" placeholder="أدخل الرقم للبحث والتواصل">
+                    <input type="text" id="friend-acc" placeholder="أدخل رقم حساب الصديق">
                 </div>
-                <button class="action-btn" onclick="searchFriend()">بحث عن الصديق</button>
+                <button class="action-btn" onclick="addChatFriend()">فتح محادثة مع الصديق</button>
                 <div id="friend-result" class="result-box" style="display:none;"></div>
             </div>
 
-            <!-- قائمة الرسائل والتواصل -->
-            <div class="chat-item">
-                <div class="chat-info">
-                    <img src="https://via.placeholder.com/45" class="chat-avatar" id="my-chat-avatar">
-                    <div>
-                        <div class="chat-name" id="current-user-display-name">المستخدم (أنت)</div>
-                        <div style="color: #94a3b8; font-size: 0.85rem;">متصل الآن</div>
-                    </div>
+            <!-- قائمة المحادثات النشطة -->
+            <div class="card">
+                <h2>الرسائل والمحادثات</h2>
+                <div id="chats-list">
+                    <!-- سيتم تعبئتها ديناميكياً -->
                 </div>
-                <div class="chat-date">الآن</div>
             </div>
 
             <!-- لوحة تحكم القائد -->
@@ -155,14 +157,29 @@
             </div>
         </div>
 
-        <!-- 5. من نحن وأعمالنا -->
+        <!-- 5. نافذة الدردشة الفعلية بين مستخدمين -->
+        <div id="chat-room-section" class="section card">
+            <span class="back-link" onclick="showSection('dashboard-section')">← رجوع لقائمة الرسائل</span>
+            <h2 id="chat-room-title">المحادثة</h2>
+            <div class="chat-box-container">
+                <div class="chat-messages" id="chat-messages-box">
+                    <!-- الرسائل تظهر هنا -->
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="chat-msg-input" placeholder="اكتب رسالتك هنا...">
+                    <button onclick="sendChatMessage()">إرسال</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. من نحن وأعمالنا -->
         <div id="about-section" class="section card">
             <span class="back-link" onclick="showSection('home-section')">← رجوع للرئيسية</span>
             <h2>من نحن وأعمالنا</h2>
             <p>نحن مبادرة <strong>CodifyX</strong> البرمجية والتعليمية. نهدف إلى تطوير حلول رقمية متميزة وربط المستخدمين بأدوات سلسة وآمنة.</p>
         </div>
 
-        <!-- 6. تواصل معنا -->
+        <!-- 7. تواصل معنا -->
         <div id="contact-section" class="section card">
             <span class="back-link" onclick="showSection('home-section')">← رجوع للرئيسية</span>
             <h2>تواصل معنا</h2>
@@ -174,14 +191,13 @@
 
     </div>
 
-    <!-- شريط التنقل السفلي (يظهر عند تسجيل الدخول) -->
+    <!-- شريط التنقل السفلي -->
     <div class="bottom-nav" id="bottom-nav-bar" style="display:none;">
         <button class="nav-item" onclick="toggleSidebar()">⚙️<span style="font-size: 0.75rem;">الإعدادات</span></button>
-        <button class="nav-item" onclick="showSection('dashboard-section')">👥<span style="font-size: 0.75rem;">الأصدقاء</span></button>
-        <button class="nav-item" onclick="showSection('dashboard-section')">💬<span style="font-size: 0.75rem;">الرسائل</span></button>
+        <button class="nav-item active" onclick="showSection('dashboard-section')">💬<span style="font-size: 0.75rem;">الرسائل</span></button>
     </div>
 
-    <!-- القائمة الجانبية (3 خطوط / إعدادات) -->
+    <!-- القائمة الجانبية -->
     <div id="sidebar" class="sidebar">
         <div class="sidebar-header">
             <h3>الإعدادات والملف</h3>
@@ -207,22 +223,26 @@
 
     <script>
         let usersDB = JSON.parse(localStorage.getItem('codifyx_users')) || {
-            "1000000001": { name: "القائد العام", pass: "admin123", balance: 5000, isLeader: true, avatar: "" }
+            "1000000001": { name: "القائد العام", pass: "admin123", balance: 5000, isLeader: true, avatar: "", chats: [] }
         };
+        let messagesDB = JSON.parse(localStorage.getItem('codifyx_messages')) || [];
         let currentUserAcc = null;
+        let activeChatWithAcc = null;
 
         function saveDB() {
             localStorage.setItem('codifyx_users', JSON.stringify(usersDB));
+            localStorage.setItem('codifyx_messages', JSON.stringify(messagesDB));
         }
 
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
             
-            if(sectionId === 'dashboard-section') {
+            if(sectionId === 'dashboard-section' || sectionId === 'chat-room-section') {
                 document.getElementById('bar-icons').style.display = 'flex';
                 document.getElementById('bottom-nav-bar').style.display = 'flex';
-                document.getElementById('bar-title').innerText = 'رسائل المنصة';
+                document.getElementById('bar-title').innerText = sectionId === 'chat-room-section' ? 'محادثة مباشرة' : 'رسائل المنصة';
+                if(sectionId === 'dashboard-section') loadChatsList();
             } else {
                 document.getElementById('bar-icons').style.display = 'none';
                 document.getElementById('bottom-nav-bar').style.display = 'none';
@@ -242,7 +262,7 @@
                 accNum = Math.floor(1000000000 + Math.random() * 9000000000).toString();
             }
 
-            usersDB[accNum] = { name: name, pass: pass, balance: 0, isLeader: false, avatar: "" };
+            usersDB[accNum] = { name: name, pass: pass, balance: 0, isLeader: false, avatar: "", chats: [] };
             saveDB();
 
             const resBox = document.getElementById('reg-result');
@@ -257,10 +277,8 @@
             if(usersDB[acc] && usersDB[acc].pass === pass) {
                 currentUserAcc = acc;
                 const user = usersDB[acc];
-                document.getElementById('current-user-display-name').innerText = `${user.name} (أنت)`;
                 
                 if(user.avatar) {
-                    document.getElementById('my-chat-avatar').src = user.avatar;
                     document.getElementById('profile-pic-preview').innerHTML = `<img src="${user.avatar}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:2px solid #38bdf8;">`;
                 }
 
@@ -280,16 +298,105 @@
             document.getElementById('sidebar').classList.toggle('open');
         }
 
-        function searchFriend() {
+        function addChatFriend() {
             const friendAcc = document.getElementById('friend-acc').value.trim();
             const resBox = document.getElementById('friend-result');
             resBox.style.display = 'block';
 
+            if(friendAcc === currentUserAcc) {
+                resBox.innerHTML = `<span style="color:#ef4444;">لا يمكنك مراسلة نفسك!</span>`;
+                return;
+            }
+
             if(usersDB[friendAcc]) {
-                resBox.innerHTML = `تم العثور على الصديق: <b>${usersDB[friendAcc].name}</b><br>رقم الحساب: ${friendAcc}`;
+                if(!usersDB[currentUserAcc].chats.includes(friendAcc)) {
+                    usersDB[currentUserAcc].chats.push(friendAcc);
+                    saveDB();
+                }
+                resBox.innerHTML = `تمت إضافة <b>${usersDB[friendAcc].name}</b> إلى قائمة المحادثات بنجاح!`;
+                loadChatsList();
             } else {
                 resBox.innerHTML = `<span style="color:#ef4444;">عذراً، رقم الحساب غير موجود!</span>`;
             }
+        }
+
+        function loadChatsList() {
+            const chatsListContainer = document.getElementById('chats-list');
+            chatsListContainer.innerHTML = '';
+            const userChats = usersDB[currentUserAcc].chats || [];
+
+            if(userChats.length === 0) {
+                chatsListContainer.innerHTML = `<p style="color: #94a3b8; text-align: center; padding: 10px;">لا توجد محادثات حالياً. أضف صديقاً برقم حسابه للبدء.</p>`;
+                return;
+            }
+
+            userChats.forEach(friendAcc => {
+                const friend = usersDB[friendAcc];
+                if(friend) {
+                    const avatarImg = friend.avatar || "https://via.placeholder.com/45";
+                    chatsListContainer.innerHTML += `
+                        <div class="chat-item" onclick="openChatRoom('${friendAcc}')">
+                            <div class="chat-info">
+                                <img src="${avatarImg}" class="chat-avatar">
+                                <div>
+                                    <div class="chat-name">${friend.name}</div>
+                                    <div style="color: #94a3b8; font-size: 0.8rem;">رقم الحساب: ${friendAcc}</div>
+                                </div>
+                            </div>
+                            <div class="chat-date">مراسلة ←</div>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        function openChatRoom(friendAcc) {
+            activeChatWithAcc = friendAcc;
+            document.getElementById('chat-room-title').innerText = `محادثة مع: ${usersDB[friendAcc].name}`;
+            showSection('chat-room-section');
+            renderMessages();
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chat-msg-input');
+            const text = input.value.trim();
+            if(!text) return;
+
+            messagesDB.push({
+                from: currentUserAcc,
+                to: activeChatWithAcc,
+                text: text,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            });
+            saveDB();
+            input.value = '';
+            renderMessages();
+        }
+
+        function renderMessages() {
+            const box = document.getElementById('chat-messages-box');
+            box.innerHTML = '';
+
+            const conversation = messagesDB.filter(m => 
+                (m.from === currentUserAcc && m.to === activeChatWithAcc) || 
+                (m.from === activeChatWithAcc && m.to === currentUserAcc)
+            );
+
+            if(conversation.length === 0) {
+                box.innerHTML = `<p style="color: #94a3b8; text-align: center; margin: auto;">لا توجد رسائل سابقة. ابدأ المحادثة الآن!</p>`;
+                return;
+            }
+
+            conversation.forEach(m => {
+                const isSent = m.from === currentUserAcc;
+                box.innerHTML += `
+                    <div class="message ${isSent ? 'sent' : 'received'}">
+                        <div>${m.text}</div>
+                        <div style="font-size: 0.7rem; color: ${isSent ? '#bae6fd' : '#94a3b8'}; text-align: left; margin-top: 4px;">${m.time}</div>
+                    </div>
+                `;
+            });
+            box.scrollTop = box.scrollHeight;
         }
 
         function openCheckBalance() {
@@ -322,7 +429,6 @@
                     const base64Img = e.target.result;
                     usersDB[currentUserAcc].avatar = base64Img;
                     saveDB();
-                    document.getElementById('my-chat-avatar').src = base64Img;
                     document.getElementById('profile-pic-preview').innerHTML = `<img src="${base64Img}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:2px solid #38bdf8;">`;
                 }
                 reader.readAsDataURL(file);
@@ -331,7 +437,9 @@
 
         function logout() {
             currentUserAcc = null;
+            activeChatWithAcc = null;
             toggleSidebar();
+            showStatus = 'home-section';
             showSection('home-section');
         }
     </script>
